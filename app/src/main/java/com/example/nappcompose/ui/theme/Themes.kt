@@ -2,10 +2,9 @@
 package com.example.nappcompose.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -22,9 +21,9 @@ private val Blue800 = Color(0xFF001CCF)
 private val Red300 = Color(0xFFEA6D7E)
 private val Red800 = Color(0xFFD00036)
 
-private val DarkPalette = darkColors(
+private val DarkScheme = darkColorScheme(
     primary = Blue200,
-    primaryVariant = Blue400,
+    primaryContainer = Blue400,
     onPrimary = Color.Black,
     secondary = Yellow400,
     onSecondary = Color.Black,
@@ -34,12 +33,12 @@ private val DarkPalette = darkColors(
     onError = Color.Black
 )
 
-private val LightPalette = lightColors(
+private val LightScheme = lightColorScheme(
     primary = Blue500,
-    primaryVariant = Blue800,
+    primaryContainer = Blue800,
     onPrimary = Color.White,
     secondary = Yellow700,
-    secondaryVariant = Yellow800,
+    secondaryContainer = Yellow800,
     onSecondary = Color.Black,
     onSurface = Color.Black,
     onBackground = Color.Black,
@@ -48,17 +47,16 @@ private val LightPalette = lightColors(
 )
 
 @Composable
-fun ChartsTheme(
+fun GHTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    colors: Colors? = null,
     content: @Composable () -> Unit
 ) {
-    val myColors = colors ?: if (isDarkTheme) DarkPalette else LightPalette
+    val myColors = if (isDarkTheme) DarkScheme else LightScheme
 
     MaterialTheme(
-        colors = myColors,
+        colorScheme = myColors,
         content = content,
-        typography = ChartsTypography,
+        typography = GHTypography,
         shapes = ComposeAppShapes
     )
 }

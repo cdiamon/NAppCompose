@@ -11,7 +11,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.nappcompose.R
 import com.example.nappcompose.databinding.ContentMainBinding
 import com.example.nappcompose.ui.components.LocalBackPressedDispatcher
-import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,14 +24,10 @@ class NavActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            // Provide WindowInsets to our content. We don't want to consume them, so that
-            // they keep being pass down the view hierarchy (since we're using fragments).
-            ProvideWindowInsets(consumeWindowInsets = false) {
-                CompositionLocalProvider(
-                    LocalBackPressedDispatcher provides this.onBackPressedDispatcher
-                ) {
-                    AndroidViewBinding(ContentMainBinding::inflate)
-                }
+            CompositionLocalProvider(
+                LocalBackPressedDispatcher provides this.onBackPressedDispatcher
+            ) {
+                AndroidViewBinding(ContentMainBinding::inflate)
             }
         }
     }

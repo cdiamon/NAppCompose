@@ -1,17 +1,21 @@
 package com.example.nappcompose.di
 
-import com.example.nappcompose.data.BtcDataStore
-import com.example.nappcompose.data.remote.BtcApi
-import com.example.nappcompose.data.remote.RemoteBtcDataSource
-import com.example.nappcompose.repository.DataRepository
-import com.example.nappcompose.repository.DataRepositoryImpl
+import com.example.nappcompose.BuildConfig
+import com.example.nappcompose.data.UserDataStore
+import com.example.nappcompose.data.remote.GhUserDataSource
+import com.example.nappcompose.data.remote.UserApi
+import com.example.nappcompose.domain.repository.DataRepository
+import com.example.nappcompose.domain.repository.DataRepositoryImpl
+import com.example.nappcompose.util.decryptCBC
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,32 +23,31 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+abstract class DataModule {
 
-    @Provides
-    fun provideBtcDataStore(api: BtcApi): BtcDataStore =
-        RemoteBtcDataSource(api)
+    @Binds
+    abstract fun bindsDataStore(repository: GhUserDataSource): UserDataStore
 
-    @Provides
-    fun provideDataRepository(dataSource: RemoteBtcDataSource): DataRepository =
-        DataRepositoryImpl(dataSource)
+    @Binds
+    abstract fun bindsDataRepository(repository: DataRepositoryImpl): DataRepository
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
 
-    private const val BASE_URL = "https://api.blockchain.info/"
+    private const val BASE_URL = "https://api.github.com/"
 
     @Provides
     @Singleton
-    fun provideBtcApi(retrofit: Retrofit): BtcApi {
-        return retrofit.create(BtcApi::class.java)
+    fun provideUserApi(retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
     }
 
     @Provides
@@ -58,10 +61,8 @@ internal object NetworkModule {
     @Provides
     fun provideHttpLogger(): HttpLoggingInterceptor.Logger {
         Timber.plant(Timber.DebugTree())
-        return object : HttpLoggingInterceptor.Logger {
-            override fun log(message: String) {
-                Timber.d("HTTP::Service:: $message")
-            }
+        return HttpLoggingInterceptor.Logger { message ->
+            Timber.d("HTTP::Service:: $message")
         }
     }
 
@@ -69,9 +70,6 @@ internal object NetworkModule {
     fun provideLoggingInterceptor(
         httpLogger: HttpLoggingInterceptor.Logger
     ): HttpLoggingInterceptor {
-//        val loggingInterceptor = HttpLoggingInterceptor()
-//        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-//        return interceptor
         val loggingInterceptor = HttpLoggingInterceptor(httpLogger)
         loggingInterceptor.level =
             HttpLoggingInterceptor.Level.BODY
@@ -79,10 +77,26 @@ internal object NetworkModule {
     }
 
     @Provides
+    @Named("headers")
+    fun provideHeadersInterceptor() = Interceptor { chain ->
+        var request = chain.request()
+        val decrTkn = "Bearer ${BuildConfig.TKN.decryptCBC()}"
+        request = request.newBuilder()
+            .addHeader("Authorization", decrTkn)
+            .addHeader("Accept", "application/vnd.github+json")
+            .addHeader("X-GitHub-Api-Version", "2022-11-28")
+            .build()
+
+        chain.proceed(request)
+    }
+
+    @Provides
     fun provideOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        @Named("headers") headersInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(headersInterceptor)
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(120, TimeUnit.SECONDS)
             .readTimeout(120, TimeUnit.SECONDS)
