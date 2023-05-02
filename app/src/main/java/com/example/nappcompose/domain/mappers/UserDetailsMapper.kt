@@ -8,10 +8,10 @@ import java.util.*
 import javax.inject.Inject
 
 class UserDetailsMapper @Inject constructor() {
-    fun map(usersSearchResponse: ResultStatus<UserDetailsResponse>): ResultStatus<UserModel.Detailed> =
+    fun map(usersDetailsResponse: ResultStatus<UserDetailsResponse>): ResultStatus<UserModel.Detailed> =
         ResultStatus(
-            status = usersSearchResponse.status,
-            data = usersSearchResponse.data?.let {
+            status = usersDetailsResponse.status,
+            data = usersDetailsResponse.data?.let {
 
                 val dataString =
                     SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(it.created_at)
@@ -29,7 +29,7 @@ class UserDetailsMapper @Inject constructor() {
                     createdAt = dataString
                 )
             },
-            error = usersSearchResponse.error,
-            message = usersSearchResponse.message
+            error = usersDetailsResponse.error,
+            message = usersDetailsResponse.message
         )
 }
