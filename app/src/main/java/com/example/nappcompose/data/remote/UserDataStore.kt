@@ -1,4 +1,4 @@
-package com.example.nappcompose.data
+package com.example.nappcompose.data.remote
 
 import com.example.nappcompose.data.networkmodels.ResultStatus
 import com.example.nappcompose.data.networkmodels.UsersQueryRequest

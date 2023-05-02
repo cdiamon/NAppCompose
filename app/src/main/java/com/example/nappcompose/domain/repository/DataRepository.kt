@@ -3,7 +3,7 @@ package com.example.nappcompose.domain.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.nappcompose.data.UserDataStore
+import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.data.networkmodels.ResultStatus
 import com.example.nappcompose.domain.UsersPagingSource
 import com.example.nappcompose.domain.mappers.UserDetailsMapper

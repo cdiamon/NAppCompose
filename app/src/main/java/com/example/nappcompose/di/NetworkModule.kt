@@ -1,7 +1,7 @@
 package com.example.nappcompose.di
 
 import com.example.nappcompose.BuildConfig
-import com.example.nappcompose.data.UserDataStore
+import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.data.remote.GhUserDataSource
 import com.example.nappcompose.data.remote.UserApi
 import com.example.nappcompose.domain.repository.DataRepository

@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">NAppCompose</string>
-
-    <string name="switch_filter">Switch filter </string>
-
 </resources>

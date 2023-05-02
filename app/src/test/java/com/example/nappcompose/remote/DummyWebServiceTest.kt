@@ -16,36 +16,36 @@ class DummyWebServiceTest : TestCase() {
     }
 
     @Test
-    fun testGetCryptoWallets() {
-        assertEquals(dummyWebService.getCryptoWallets().size, 4)
+    fun testGetUserDetails() {
+        assertEquals(dummyWebService.getUsers().size, 4)
 
-        assertEquals(dummyWebService.getCryptoWallets().filter { !it.deleted }.size, 3)
+        assertEquals(dummyWebService.getUsers().filter { !it.deleted }.size, 3)
     }
 
     @Test
-    fun testGetAllWallets() {
-        val allWallets = dummyWebService.getAllWallets()
+    fun testGetAllUsers() {
+        val allUsers = dummyWebService.getAllUsers()
 
-        assertEquals(allWallets.isEmpty(), false)
+        assertEquals(allUsers.isEmpty(), false)
 
-        assertNotNull(allWallets.find { it is CryptocoinWallet })
-        assertNotNull(allWallets.find { it is FiatWallet })
-        assertNotNull(allWallets.find { it is MetalWallet })
+        assertNotNull(allUsers.find { it is FirstT })
+        assertNotNull(allUsers.find { it is SecondT })
+        assertNotNull(allUsers.find { it is ThirdT })
     }
 
     @Test
-    fun testGetAllCurrencies() {
-        val allWallets = dummyWebService.getAllCurrencies()
+    fun testGetAllDetails() {
+        val allUsers = dummyWebService.getAllUsers()
 
-        assertEquals(allWallets.isEmpty(), false)
+        assertEquals(allUsers.isEmpty(), false)
 
-        assertNotNull(allWallets.find { it is Fiat })
-        assertNotNull(allWallets.find { it is Metal })
-        assertNotNull(allWallets.find { it is Cryptocoin })
+        assertNotNull(allUsers.find { it is FirstT })
+        assertNotNull(allUsers.find { it is SecondT })
+        assertNotNull(allUsers.find { it is ThirdT })
     }
 
     @Test
-    fun testGetCurrencyWallets() {
-        assertEquals(dummyWebService.getCurrencyWallets().isEmpty(), false)
+    fun testGetDetails() {
+        assertEquals(dummyWebService.getAllUsers().isEmpty(), false)
     }
 }

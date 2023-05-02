@@ -28,7 +28,7 @@ import com.example.nappcompose.ui.theme.Purple500
 import com.example.nappcompose.ui.users.UsersViewModel
 
 /**
- * Entry point for a chart screen.
+ * List of users with pagination.
  * @param onItemClicked callback to be invoked when an item is clicked.
  */
 @OptIn(ExperimentalComposeUiApi::class)

@@ -1,6 +1,5 @@
 package com.example.nappcompose.data.remote
 
-import com.example.nappcompose.data.UserDataStore
 import com.example.nappcompose.data.networkmodels.ResultStatus
 import com.example.nappcompose.data.networkmodels.UsersQueryRequest
 import com.example.nappcompose.data.networkmodels.UserDetailsResponse
