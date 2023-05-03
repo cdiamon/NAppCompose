@@ -8,8 +8,8 @@ data class UsersSearchResponse(
     @SerializedName("incomplete_results") val incompleteResults: Boolean
 ) {
     data class User(
-        val id: Int,
-        val login: String,
+        @SerializedName("id") val id: Int,
+        @SerializedName("login") val login: String,
         @SerializedName("avatar_url") val avatarUrl: String,
         @SerializedName("html_url") val htmlUrl: String,
     )

@@ -22,17 +22,11 @@ class UsersViewModel @Inject constructor(
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    private val _userList = MutableStateFlow(PagingData.empty<UserModel.Generic>())
-    val userList: StateFlow<PagingData<UserModel.Generic>> = searchText
+    val userList: Flow<PagingData<UserModel.Generic>> = searchText
         .debounce(DEBOUNCE_MILLIS)
         .flatMapLatest {
             getUsersList(it)
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            _userList.value
-        )
+        }.cachedIn(viewModelScope)
 
     private val _userDetails =
         MutableStateFlow<ResultStatus<UserModel.Detailed>>(ResultStatus.loading())

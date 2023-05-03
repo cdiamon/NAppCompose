@@ -11,6 +11,7 @@ import com.example.nappcompose.domain.mappers.UserListMapper
 import com.example.nappcompose.domain.models.UserModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 interface DataRepository {
@@ -35,11 +36,11 @@ class DataRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun loadUserDetails(name: String): Flow<ResultStatus<UserModel.Detailed>> {
-        return flow {
-            emit(ResultStatus.loading())
+    override fun loadUserDetails(name: String): Flow<ResultStatus<UserModel.Detailed>> =
+        flow {
             val response = dataSource.getUserDetails(name)
             emit(detailsMapper.map(response))
+        }.onStart {
+            emit(ResultStatus.loading())
         }
-    }
 }

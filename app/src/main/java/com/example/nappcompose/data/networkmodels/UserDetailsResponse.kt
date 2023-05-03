@@ -16,13 +16,13 @@ import java.util.Date
  * @param createdAt When the user was created.
  */
 data class UserDetailsResponse(
-    val id: Int,
-    val login: String,
-    val name: String?,
-    val location: String?,
-    val url: String,
-    val bio: String?,
-    val followers: Int?,
+    @SerializedName("id") val id: Int,
+    @SerializedName("login") val login: String,
+    @SerializedName("name") val name: String?,
+    @SerializedName("location") val location: String?,
+    @SerializedName("url") val url: String,
+    @SerializedName("bio") val bio: String?,
+    @SerializedName("followers") val followers: Int?,
     @SerializedName("avatar_url") val avatarUrl: String,
     @SerializedName("public_repos") val publicRepos: Int,
     @SerializedName("public_gists") val publicGists: Int,
