@@ -60,7 +60,7 @@ fun UsersList(
 
                     // Profile image
                     AsyncImage(
-                        model = user?.avatar_url,
+                        model = user?.avatarUrl,
                         modifier = Modifier
                             .clip(shape = CircleShape)
                             .size(56.dp),

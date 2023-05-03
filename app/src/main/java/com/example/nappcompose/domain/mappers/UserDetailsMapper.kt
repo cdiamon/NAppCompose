@@ -14,18 +14,18 @@ class UserDetailsMapper @Inject constructor() {
             data = usersDetailsResponse.data?.let {
 
                 val dataString =
-                    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(it.created_at)
+                    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(it.createdAt)
 
                 UserModel.Detailed(
                     id = it.id,
                     login = it.login,
                     name = it.name,
                     location = it.location,
-                    avatar_url = it.avatar_url,
+                    avatarUrl = it.avatarUrl,
                     url = it.url,
                     bio = it.bio,
-                    public_repos = it.public_repos,
-                    public_gists = it.public_gists,
+                    publicRepos = it.publicRepos,
+                    publicGists = it.publicGists,
                     createdAt = dataString
                 )
             },

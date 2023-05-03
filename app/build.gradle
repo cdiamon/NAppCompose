@@ -25,7 +25,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "TKN", "\"zy/AARBnh6dy2Pf/7RbklW3t0aHFi8VHw63OAwrp3+4oYqyW+9Hx9AuvwnSqRU1O\""
+            buildConfigField "String", "TKN", TKN
         }
         release {
             minifyEnabled false

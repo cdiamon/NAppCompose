@@ -34,7 +34,7 @@ fun BottomSheet() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AsyncImage(
-                        model = details.data?.avatar_url,
+                        model = details.data?.avatarUrl,
                         modifier = Modifier
                             .clip(shape = RoundedCornerShape(20))
                             .size(92.dp),
@@ -79,7 +79,7 @@ fun BottomSheet() {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "has repos: ${details.data?.public_repos.toString()}",
+                    text = "has repos: ${details.data?.publicRepos.toString()}",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

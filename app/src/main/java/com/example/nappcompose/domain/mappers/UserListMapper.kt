@@ -10,8 +10,8 @@ class UserListMapper @Inject constructor() {
             UserModel.Generic(
                 id = it.id,
                 login = it.login,
-                avatar_url = it.avatar_url,
-                htmlUrl = it.html_url,
+                avatarUrl = it.avatarUrl,
+                htmlUrl = it.htmlUrl,
             )
         }
 }

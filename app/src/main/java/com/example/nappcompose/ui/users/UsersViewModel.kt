@@ -24,8 +24,8 @@ class UsersViewModel @Inject constructor(
 
     private val _userList = MutableStateFlow(PagingData.empty<UserModel.Generic>())
     val userList: StateFlow<PagingData<UserModel.Generic>> = searchText
-        .debounce(500L)
-        .flatMapMerge {
+        .debounce(DEBOUNCE_MILLIS)
+        .flatMapLatest {
             getUsersList(it)
         }
         .stateIn(
@@ -46,8 +46,12 @@ class UsersViewModel @Inject constructor(
     }
 
     fun fetchUserDetails(name: String) =
-        dataRepository.loadUserDatails(name)
+        dataRepository.loadUserDetails(name)
             .onEach {
                 _userDetails.value = it
             }.launchIn(viewModelScope)
+
+    private companion object {
+        const val DEBOUNCE_MILLIS = 500L
+    }
 }

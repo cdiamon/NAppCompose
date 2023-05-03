@@ -26,90 +26,86 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
+abstract class NetworkModule {
 
     @Binds
     abstract fun bindsDataStore(repository: GhUserDataSource): UserDataStore
 
     @Binds
     abstract fun bindsDataRepository(repository: DataRepositoryImpl): DataRepository
-}
 
-@Module
-@InstallIn(SingletonComponent::class)
-internal object NetworkModule {
-
-    private const val BASE_URL = "https://api.github.com/"
-
-    @Provides
-    @Singleton
-    fun provideUserApi(retrofit: Retrofit): UserApi {
-        return retrofit.create(UserApi::class.java)
-    }
-
-    @Provides
-    fun provideSerializer(): Gson {
-        return GsonBuilder()
-            .setLenient()
-            .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-            .create()
-    }
-
-    @Provides
-    fun provideHttpLogger(): HttpLoggingInterceptor.Logger {
-        Timber.plant(Timber.DebugTree())
-        return HttpLoggingInterceptor.Logger { message ->
-            Timber.d("HTTP::Service:: $message")
+    companion object {
+        @Provides
+        @Singleton
+        fun provideUserApi(retrofit: Retrofit): UserApi {
+            return retrofit.create(UserApi::class.java)
         }
-    }
 
-    @Provides
-    fun provideLoggingInterceptor(
-        httpLogger: HttpLoggingInterceptor.Logger
-    ): HttpLoggingInterceptor {
-        val loggingInterceptor = HttpLoggingInterceptor(httpLogger)
-        loggingInterceptor.level =
-            HttpLoggingInterceptor.Level.BODY
-        return loggingInterceptor
-    }
+        @Provides
+        fun provideSerializer(): Gson {
+            return GsonBuilder()
+                .setLenient()
+                .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+                .create()
+        }
 
-    @Provides
-    @Named("headers")
-    fun provideHeadersInterceptor() = Interceptor { chain ->
-        var request = chain.request()
-        val decrTkn = "Bearer ${BuildConfig.TKN.decryptCBC()}"
-        request = request.newBuilder()
-            .addHeader("Authorization", decrTkn)
-            .addHeader("Accept", "application/vnd.github+json")
-            .addHeader("X-GitHub-Api-Version", "2022-11-28")
-            .build()
+        @Provides
+        fun provideHttpLogger(): HttpLoggingInterceptor.Logger {
+            Timber.plant(Timber.DebugTree())
+            return HttpLoggingInterceptor.Logger { message ->
+                Timber.d("HTTP::Service:: $message")
+            }
+        }
 
-        chain.proceed(request)
-    }
+        @Provides
+        fun provideLoggingInterceptor(
+            httpLogger: HttpLoggingInterceptor.Logger
+        ): HttpLoggingInterceptor {
+            val loggingInterceptor = HttpLoggingInterceptor(httpLogger)
+            loggingInterceptor.level =
+                HttpLoggingInterceptor.Level.BODY
+            return loggingInterceptor
+        }
 
-    @Provides
-    fun provideOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor,
-        @Named("headers") headersInterceptor: Interceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(headersInterceptor)
-            .addInterceptor(httpLoggingInterceptor)
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
-            .build()
-    }
+        @Provides
+        @Named("headers")
+        fun provideHeadersInterceptor() = Interceptor { chain ->
+            var request = chain.request()
+            val decrTkn = "Bearer ${BuildConfig.TKN.decryptCBC()}"
+            request = request.newBuilder()
+                .addHeader("Authorization", decrTkn)
+                .addHeader("Accept", "application/vnd.github+json")
+                .addHeader("X-GitHub-Api-Version", "2022-11-28")
+                .build()
 
-    @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+            chain.proceed(request)
+        }
+
+        @Provides
+        fun provideOkHttpClient(
+            httpLoggingInterceptor: HttpLoggingInterceptor,
+            @Named("headers") headersInterceptor: Interceptor
+        ): OkHttpClient {
+            return OkHttpClient.Builder()
+                .addInterceptor(headersInterceptor)
+                .addInterceptor(httpLoggingInterceptor)
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
+                .build()
+        }
+
+        @Provides
+        fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(Companion.BASE_URL)
+                .client(okHttpClient)
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
+        }
+
+        private const val BASE_URL = "https://api.github.com/"
     }
 }

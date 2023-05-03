@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface DataRepository {
-    fun loadUserDatails(name: String): Flow<ResultStatus<UserModel.Detailed>>
+    fun loadUserDetails(name: String): Flow<ResultStatus<UserModel.Detailed>>
     fun loadUsersList(query: String): Flow<PagingData<UserModel.Generic>>
 }
 
@@ -35,7 +35,7 @@ class DataRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun loadUserDatails(name: String): Flow<ResultStatus<UserModel.Detailed>> {
+    override fun loadUserDetails(name: String): Flow<ResultStatus<UserModel.Detailed>> {
         return flow {
             emit(ResultStatus.loading())
             val response = dataSource.getUserDetails(name)
