@@ -24,6 +24,7 @@ class UserDetailsMapper @Inject constructor() {
                     avatarUrl = it.avatarUrl,
                     url = it.url,
                     bio = it.bio,
+                    followers = it.followers,
                     publicRepos = it.publicRepos,
                     publicGists = it.publicGists,
                     createdAt = dataString

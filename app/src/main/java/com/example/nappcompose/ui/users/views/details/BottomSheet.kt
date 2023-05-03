@@ -79,7 +79,12 @@ fun BottomSheet() {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "has repos: ${details.data?.publicRepos.toString()}",
+                    text = "followers: ${details.data?.followers ?: 0}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "repos: ${details.data?.publicRepos.toString()}",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

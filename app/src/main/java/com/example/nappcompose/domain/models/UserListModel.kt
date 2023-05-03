@@ -20,8 +20,9 @@ sealed class UserModel(
         val name: String?,
         val location: String?,
         val url: String,
-        val createdAt: String,
         val bio: String?,
+        val followers: Int?,
+        val createdAt: String,
         val publicRepos: Int,
         val publicGists: Int,
     ) : UserModel(id = id, login = login, avatarUrl = avatarUrl)

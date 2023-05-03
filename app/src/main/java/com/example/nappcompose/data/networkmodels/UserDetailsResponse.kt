@@ -22,6 +22,7 @@ data class UserDetailsResponse(
     val location: String?,
     val url: String,
     val bio: String?,
+    val followers: Int?,
     @SerializedName("avatar_url") val avatarUrl: String,
     @SerializedName("public_repos") val publicRepos: Int,
     @SerializedName("public_gists") val publicGists: Int,

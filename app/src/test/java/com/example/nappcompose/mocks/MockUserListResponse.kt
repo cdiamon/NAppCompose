@@ -40,6 +40,7 @@ fun mockUserDetailsResponse() = ResultStatus(
         avatarUrl = "https://image.png",
         url = "https://github.com/LoginName",
         bio = "I play drums",
+        followers = 42,
         publicRepos = 3,
         publicGists = 2,
         createdAt = Date.from(Instant.parse("2018-10-22T00:37:25Z"))
@@ -51,13 +52,14 @@ fun mockUserDetailsModel() = ResultStatus(
     data = UserModel.Detailed(
         id = 123,
         login = "LoginName",
+        avatarUrl = "https://image.png",
         name = "Sam Black",
         location = "Tokyo",
-        avatarUrl = "https://image.png",
         url = "https://github.com/LoginName",
+        createdAt = "22.10.2018",
         bio = "I play drums",
+        followers = 69,
         publicRepos = 3,
         publicGists = 2,
-        createdAt = "22.10.2018"
     )
 )
