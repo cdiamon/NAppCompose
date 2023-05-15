@@ -1,29 +1,23 @@
 package com.example.nappcompose.ui.users.views.list
 
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
-import coil.compose.AsyncImage
-import com.example.nappcompose.domain.models.UserModel
-import com.example.nappcompose.ui.theme.GHTypography
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.example.nappcompose.ui.theme.Purple500
 import com.example.nappcompose.ui.users.UsersViewModel
 import com.example.nappcompose.ui.users.UsersViewModelImpl
@@ -47,69 +41,13 @@ fun UsersList(
         keyboardController?.hide()
         false
     }) {
-        items(users) { user: UserModel.Generic? ->
-            Box(modifier = Modifier
-                .clickable { onItemClicked(user?.login) }
-                .padding(8.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    // Profile image
-                    AsyncImage(
-                        model = user?.avatarUrl,
-                        modifier = Modifier
-                            .clip(shape = CircleShape)
-                            .size(56.dp),
-                        contentDescription = "avatar"
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 12.dp)
-                    ) {
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-
-                            // Text that shows the login
-                            Text(
-                                text = user?.login.toString(),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = GHTypography.bodyLarge
-                            )
-
-                            // Text that shows the id
-                            Text(
-                                text = "id: ${user?.id.toString()}",
-                                style = GHTypography.bodyMedium
-                            )
-
-                        }
-
-                        // Text that shows the message
-                        Text(
-                            modifier = Modifier
-                                .padding(top = 2.dp),
-                            text = user?.htmlUrl.toString(),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = GHTypography.bodySmall
-                        )
-
-                    }
-                }
-            }
-
+        items(
+            count = users.itemCount,
+            key = users.itemKey(),
+            contentType = users.itemContentType()
+        ) { index ->
+            val user = users[index]
+            UserItem(user = user, onItemClicked = onItemClicked)
         }
 
         when (users.loadState.refresh) { //FIRST LOAD
