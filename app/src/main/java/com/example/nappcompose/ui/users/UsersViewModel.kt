@@ -6,8 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.nappcompose.data.networkmodels.ResultStatus
-import com.example.nappcompose.domain.models.UserModel
+import com.example.nappcompose.domain.models.User
 import com.example.nappcompose.domain.repository.DataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,8 +18,8 @@ import javax.inject.Inject
 interface UsersViewModel {
 
     val searchText: StateFlow<String>
-    val userList: Flow<PagingData<UserModel.Generic>>
-    val userDetails: StateFlow<ResultStatus<UserModel.Detailed>>
+    val userList: Flow<PagingData<User.UserModel>>
+    val userDetails: StateFlow<Result<User>>
     fun fetchUserDetails(name: String): Job
     fun onSearchTextChange(text: String)
 }
@@ -36,16 +35,16 @@ class UsersViewModelImpl @Inject constructor(
 
     override val searchText = MutableStateFlow("")
 
-    override val userList: Flow<PagingData<UserModel.Generic>> = searchText
+    override val userList: Flow<PagingData<User.UserModel>> = searchText
         .debounce(DEBOUNCE_MILLIS)
         .flatMapLatest {
             getUsersList(it)
         }.cachedIn(viewModelScope)
 
     override val userDetails =
-        MutableStateFlow<ResultStatus<UserModel.Detailed>>(ResultStatus.loading())
+        MutableStateFlow<Result<User>>(Result.success(User.Loading))
 
-    private fun getUsersList(query: String): Flow<PagingData<UserModel.Generic>> =
+    private fun getUsersList(query: String): Flow<PagingData<User.UserModel>> =
         dataRepository.loadUsersList(query).cachedIn(viewModelScope)
 
     override fun onSearchTextChange(text: String) {
@@ -57,7 +56,7 @@ class UsersViewModelImpl @Inject constructor(
             .onEach {
                 userDetails.value = it
             }.onStart {
-                userDetails.value = ResultStatus.loading()
+                userDetails.value = Result.success(User.Loading)
             }.launchIn(viewModelScope)
 
     private companion object {

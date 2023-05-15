@@ -3,9 +3,6 @@ package com.example.nappcompose.domain.mappers
 import com.example.nappcompose.mocks.mockUserDetailsModel
 import com.example.nappcompose.mocks.mockUserDetailsResponse
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertSame
-
-import org.junit.Before
 import org.junit.Test
 
 class UserDetailsMapperTest {
@@ -16,6 +13,6 @@ class UserDetailsMapperTest {
     @Test
     fun map() {
         val model = UserDetailsMapper().map(responseMock)
-        assertSame(modelMock, model)
+        assertEquals(modelMock, model)
     }
 }

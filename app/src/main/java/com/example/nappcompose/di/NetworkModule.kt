@@ -7,20 +7,20 @@ import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.domain.repository.DataRepository
 import com.example.nappcompose.domain.repository.DataRepositoryImpl
 import com.example.nappcompose.util.decryptCBC
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -44,11 +44,13 @@ abstract class NetworkModule {
         }
 
         @Provides
-        fun provideSerializer(): Gson {
-            return GsonBuilder()
-                .setLenient()
-                .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-                .create()
+        fun provideSerializer(): Converter.Factory {
+            val contentType = "application/json".toMediaType()
+            val json = Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
+            return json.asConverterFactory(contentType)
         }
 
         @Provides
@@ -97,12 +99,12 @@ abstract class NetworkModule {
         }
 
         @Provides
-        fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+        fun provideRetrofit(okHttpClient: OkHttpClient, serializer: Converter.Factory): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(serializer)
                 .build()
         }
 

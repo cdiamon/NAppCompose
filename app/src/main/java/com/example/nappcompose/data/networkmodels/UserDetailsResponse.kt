@@ -1,7 +1,8 @@
 package com.example.nappcompose.data.networkmodels
 
-import com.google.gson.annotations.SerializedName
-import java.util.Date
+import kotlinx.datetime.Instant
+import kotlinx.serialization.*
+import java.util.*
 
 /**
  * @param id The id of the user.
@@ -15,16 +16,17 @@ import java.util.Date
  * @param publicGists The public gists of the user.
  * @param createdAt When the user was created.
  */
+@Serializable
 data class UserDetailsResponse(
-    @SerializedName("id") val id: Int,
-    @SerializedName("login") val login: String,
-    @SerializedName("name") val name: String?,
-    @SerializedName("location") val location: String?,
-    @SerializedName("url") val url: String,
-    @SerializedName("bio") val bio: String?,
-    @SerializedName("followers") val followers: Int?,
-    @SerializedName("avatar_url") val avatarUrl: String,
-    @SerializedName("public_repos") val publicRepos: Int,
-    @SerializedName("public_gists") val publicGists: Int,
-    @SerializedName("created_at") val createdAt: Date,
+    @SerialName("id") val id: Int,
+    @SerialName("login") val login: String,
+    @SerialName("name") val name: String?,
+    @SerialName("location") val location: String?,
+    @SerialName("url") val url: String,
+    @SerialName("bio") val bio: String?,
+    @SerialName("followers") val followers: Int?,
+    @SerialName("avatar_url") val avatarUrl: String,
+    @SerialName("public_repos") val publicRepos: Int,
+    @SerialName("public_gists") val publicGists: Int,
+    @SerialName("created_at") val createdAt: Instant,
 )

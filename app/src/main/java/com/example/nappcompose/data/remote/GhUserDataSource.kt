@@ -1,8 +1,7 @@
 package com.example.nappcompose.data.remote
 
-import com.example.nappcompose.data.networkmodels.ResultStatus
-import com.example.nappcompose.data.networkmodels.UsersQueryRequest
 import com.example.nappcompose.data.networkmodels.UserDetailsResponse
+import com.example.nappcompose.data.networkmodels.UsersQueryRequest
 import com.example.nappcompose.data.networkmodels.UsersSearchResponse
 import retrofit2.Response
 import javax.inject.Inject
@@ -11,7 +10,7 @@ class GhUserDataSource @Inject constructor(
     private val userApi: UserApi
 ) : UserDataStore {
 
-    override suspend fun getUserList(searchQuery: UsersQueryRequest): ResultStatus<UsersSearchResponse> =
+    override suspend fun getUserList(searchQuery: UsersQueryRequest): Result<UsersSearchResponse> =
         getResponse {
             userApi.getUsers(
                 query = searchQuery.query,
@@ -20,23 +19,21 @@ class GhUserDataSource @Inject constructor(
             )
         }
 
-    override suspend fun getUserDetails(name: String): ResultStatus<UserDetailsResponse> =
+    override suspend fun getUserDetails(name: String): Result<UserDetailsResponse> =
         getResponse {
             userApi.getUserDetails(name)
         }
 
     companion object {
-        suspend fun <T> getResponse(request: suspend () -> Response<T>): ResultStatus<T> {
+        suspend fun <T> getResponse(request: suspend () -> Response<T>): Result<T> {
             return try {
                 val result = request.invoke()
-                if (result.isSuccessful) {
-                    return ResultStatus.success(result.body())
-                } else {
-                    ResultStatus.error(result.errorBody().toString())
-                }
+                result.body()?.let {
+                    Result.success(it)
+                } ?: Result.failure(Exception(result.errorBody().toString()))
             } catch (e: Throwable) {
                 e.printStackTrace()
-                ResultStatus.error("Unknown Error", null)
+                Result.failure(e)
             }
         }
     }

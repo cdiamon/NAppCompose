@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NAppCompose</string>
+    <string name="detailsError">Details fetching error</string>
 </resources>

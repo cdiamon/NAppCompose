@@ -2,24 +2,24 @@ package com.example.nappcompose.domain
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.data.networkmodels.UsersQueryRequest
+import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.domain.mappers.UserListMapper
-import com.example.nappcompose.domain.models.UserModel
+import com.example.nappcompose.domain.models.User
 
 class UsersPagingSource(
     private val userApiService: UserDataStore,
     private val query: String,
     private val mapper: UserListMapper
-) : PagingSource<Int, UserModel.Generic>() {
-    override fun getRefreshKey(state: PagingState<Int, UserModel.Generic>): Int? {
+) : PagingSource<Int, User.UserModel>() {
+    override fun getRefreshKey(state: PagingState<Int, User.UserModel>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserModel.Generic> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User.UserModel> {
         return try {
             val page = params.key ?: 1
             val response = if (query.isEmpty()) {
@@ -31,7 +31,7 @@ class UsersPagingSource(
                         perPage = params.loadSize,
                         query = query
                     )
-                ).data?.userList?.mapNotNull {
+                ).getOrNull()?.userList?.mapNotNull {
                     mapper.map(it)
                 } ?: emptyList()
             }

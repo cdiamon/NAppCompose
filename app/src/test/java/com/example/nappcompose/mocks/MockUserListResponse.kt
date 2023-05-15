@@ -1,16 +1,13 @@
 package com.example.nappcompose.mocks
 
-import com.example.nappcompose.data.networkmodels.ResultStatus
 import com.example.nappcompose.data.networkmodels.UserDetailsResponse
 import com.example.nappcompose.data.networkmodels.UsersSearchResponse
-import com.example.nappcompose.domain.models.UserModel
-import java.time.Instant
-import java.util.*
+import com.example.nappcompose.domain.models.User
+import kotlinx.datetime.Instant
 
 
-fun mockUserListResponse() = ResultStatus(
-    status = ResultStatus.Status.SUCCESS,
-    data = UsersSearchResponse(
+fun mockUserListResponse() = Result.success(
+    UsersSearchResponse(
         totalCount = 10,
         incompleteResults = false,
         userList = listOf(
@@ -30,9 +27,8 @@ fun mockUserListResponse() = ResultStatus(
     )
 )
 
-fun mockUserDetailsResponse() = ResultStatus(
-    status = ResultStatus.Status.SUCCESS,
-    data = UserDetailsResponse(
+fun mockUserDetailsResponse() = Result.success(
+    UserDetailsResponse(
         id = 123,
         login = "LoginName",
         name = "Sam Black",
@@ -43,22 +39,21 @@ fun mockUserDetailsResponse() = ResultStatus(
         followers = 42,
         publicRepos = 3,
         publicGists = 2,
-        createdAt = Date.from(Instant.parse("2018-10-22T00:37:25Z"))
+        createdAt = Instant.parse("2018-10-22T00:37:25Z")
     )
 )
 
-fun mockUserDetailsModel() = ResultStatus(
-    status = ResultStatus.Status.SUCCESS,
-    data = UserModel.Detailed(
+fun mockUserDetailsModel() = Result.success(
+    User.UserModel(
         id = 123,
         login = "LoginName",
         avatarUrl = "https://image.png",
         name = "Sam Black",
         location = "Tokyo",
         url = "https://github.com/LoginName",
-        createdAt = "22.10.2018",
+        createdAt = "2018-10-22",
         bio = "I play drums",
-        followers = 69,
+        followers = 42,
         publicRepos = 3,
         publicGists = 2,
     )

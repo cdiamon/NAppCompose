@@ -12,12 +12,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.nappcompose.domain.models.UserModel
+import com.example.nappcompose.domain.models.User
 import com.example.nappcompose.ui.theme.GHTypography
 
 
 @Composable
-fun UserItem(user: UserModel.Generic?, onItemClicked: (String?) -> Unit) {
+fun UserItem(user: User.UserModel?, onItemClicked: (String?) -> Unit) {
     val onNameClick = remember(user) { { onItemClicked(user?.login) } }
 
     Box(
