@@ -26,6 +26,7 @@ import com.example.nappcompose.domain.models.UserModel
 import com.example.nappcompose.ui.theme.GHTypography
 import com.example.nappcompose.ui.theme.Purple500
 import com.example.nappcompose.ui.users.UsersViewModel
+import com.example.nappcompose.ui.users.UsersViewModelImpl
 
 /**
  * List of users with pagination.
@@ -36,7 +37,7 @@ import com.example.nappcompose.ui.users.UsersViewModel
 fun UsersList(
     onItemClicked: (String?) -> Unit,
 ) {
-    val viewModel = hiltViewModel<UsersViewModel>()
+    val viewModel: UsersViewModel = hiltViewModel<UsersViewModelImpl>()
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 

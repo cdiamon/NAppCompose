@@ -15,10 +15,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.nappcompose.data.networkmodels.ResultStatus
 import com.example.nappcompose.ui.users.UsersViewModel
+import com.example.nappcompose.ui.users.UsersViewModelImpl
 
 @Composable
 fun BottomSheet() {
-    val viewModel = hiltViewModel<UsersViewModel>()
+    val viewModel: UsersViewModel = hiltViewModel<UsersViewModelImpl>()
     val details = viewModel.userDetails.collectAsState().value
 
     Column(

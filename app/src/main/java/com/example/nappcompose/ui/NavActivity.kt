@@ -3,14 +3,12 @@ package com.example.nappcompose.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.nappcompose.R
 import com.example.nappcompose.databinding.ContentMainBinding
-import com.example.nappcompose.ui.components.LocalBackPressedDispatcher
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,11 +22,7 @@ class NavActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            CompositionLocalProvider(
-                LocalBackPressedDispatcher provides this.onBackPressedDispatcher
-            ) {
-                AndroidViewBinding(ContentMainBinding::inflate)
-            }
+            AndroidViewBinding(ContentMainBinding::inflate)
         }
     }
 

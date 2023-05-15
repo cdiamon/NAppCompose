@@ -20,13 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.nappcompose.ui.users.UsersViewModel
+import com.example.nappcompose.ui.users.UsersViewModelImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchView(state: StateFlow<String>) {
-    val viewModel = hiltViewModel<UsersViewModel>()
+    val viewModel: UsersViewModel = hiltViewModel<UsersViewModelImpl>()
     val searchText = state.collectAsState().value
     Box(
         modifier = Modifier

@@ -1,9 +1,9 @@
 package com.example.nappcompose.di
 
 import com.example.nappcompose.BuildConfig
-import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.data.remote.GhUserDataSource
 import com.example.nappcompose.data.remote.UserApi
+import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.domain.repository.DataRepository
 import com.example.nappcompose.domain.repository.DataRepositoryImpl
 import com.example.nappcompose.util.decryptCBC
@@ -99,7 +99,7 @@ abstract class NetworkModule {
         @Provides
         fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
             return Retrofit.Builder()
-                .baseUrl(Companion.BASE_URL)
+                .baseUrl(BASE_URL)
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))

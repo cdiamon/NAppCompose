@@ -3,15 +3,14 @@ package com.example.nappcompose.domain.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.data.networkmodels.ResultStatus
+import com.example.nappcompose.data.remote.UserDataStore
 import com.example.nappcompose.domain.UsersPagingSource
 import com.example.nappcompose.domain.mappers.UserDetailsMapper
 import com.example.nappcompose.domain.mappers.UserListMapper
 import com.example.nappcompose.domain.models.UserModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 interface DataRepository {
@@ -40,7 +39,5 @@ class DataRepositoryImpl @Inject constructor(
         flow {
             val response = dataSource.getUserDetails(name)
             emit(detailsMapper.map(response))
-        }.onStart {
-            emit(ResultStatus.loading())
         }
 }

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.example.nappcompose.ui.users
 
 import androidx.lifecycle.ViewModel
@@ -8,41 +10,54 @@ import com.example.nappcompose.data.networkmodels.ResultStatus
 import com.example.nappcompose.domain.models.UserModel
 import com.example.nappcompose.domain.repository.DataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+
+interface UsersViewModel {
+
+    val searchText: StateFlow<String>
+    val userList: Flow<PagingData<UserModel.Generic>>
+    val userDetails: StateFlow<ResultStatus<UserModel.Detailed>>
+    fun fetchUserDetails(name: String): Job
+    fun onSearchTextChange(text: String)
+}
 
 /**
  * Used to communicate between screens.
  */
+@OptIn(FlowPreview::class)
 @HiltViewModel
-class UsersViewModel @Inject constructor(
+class UsersViewModelImpl @Inject constructor(
     private val dataRepository: DataRepository
-) : ViewModel() {
+) : UsersViewModel, ViewModel() {
 
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
+    override val searchText = MutableStateFlow("")
 
-    val userList: Flow<PagingData<UserModel.Generic>> = searchText
+    override val userList: Flow<PagingData<UserModel.Generic>> = searchText
         .debounce(DEBOUNCE_MILLIS)
         .flatMapLatest {
             getUsersList(it)
         }.cachedIn(viewModelScope)
 
-    private val _userDetails =
+    override val userDetails =
         MutableStateFlow<ResultStatus<UserModel.Detailed>>(ResultStatus.loading())
-    val userDetails = _userDetails.asStateFlow()
 
     private fun getUsersList(query: String): Flow<PagingData<UserModel.Generic>> =
         dataRepository.loadUsersList(query).cachedIn(viewModelScope)
 
-    fun onSearchTextChange(text: String) {
-        _searchText.value = text
+    override fun onSearchTextChange(text: String) {
+        searchText.value = text
     }
 
-    fun fetchUserDetails(name: String) =
+    override fun fetchUserDetails(name: String) =
         dataRepository.loadUserDetails(name)
             .onEach {
-                _userDetails.value = it
+                userDetails.value = it
+            }.onStart {
+                userDetails.value = ResultStatus.loading()
             }.launchIn(viewModelScope)
 
     private companion object {
